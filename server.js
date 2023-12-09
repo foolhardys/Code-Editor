@@ -2,11 +2,24 @@ import express from 'express'
 import http from 'http'
 import { Server } from 'socket.io'
 import { ACTIONS } from './src/Actions.js'
+import path from 'path'
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express()
 
 const server = http.createServer(app)
 const io = new Server(server)
+
+app.use(express.static('dist'))
+
+
+app.use((req, res) => {
+    res.sendFile(path.join( __dirname, 'dist', 'index.html'))
+})
 
 const userSocketMap = {}
 const getAllConnectedClients = (roomId) => {
